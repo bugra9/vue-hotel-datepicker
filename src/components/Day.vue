@@ -11,6 +11,8 @@
 
 <script>
 import fecha from 'fecha';
+import * as some from 'lodash.some';
+import * as forEach from 'lodash.foreach';
 
 import Helpers from './helpers.js'
 
@@ -104,15 +106,15 @@ export default {
         if (this.options.allowedRanges.length !== 0) {
           if ( !this.isDisabled && this.checkIn !== null && this.checkOut == null ) {
             // If the day is one of the allowed check out days and is not highlighted
-            if ( _.some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 && !this.isHighlighted) ) {
+            if ( some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 && !this.isHighlighted) ) {
               return 'datepicker__month-day--allowed-checkout'
             }
             // If the day is one of the allowed check out days and is highlighted
-            if ( _.some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 && this.isHighlighted) ) {
+            if ( some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 && this.isHighlighted) ) {
               return 'datepicker__month-day--selected datepicker__month-day--allowed-checkout'
             }
             // If the day is not one of the allowed Checkout Days and is highlighted
-            if ( !(_.some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 )) && this.isHighlighted) {
+            if ( !(some(  this.allowedCheckoutDays, (i) => this.compareDay(i, this.date) == 0 )) && this.isHighlighted) {
               return 'datepicker__month-day--out-of-range datepicker__month-day--selected'
             }
             else {
@@ -224,7 +226,7 @@ export default {
     checkIfDisabled() {
       this.isDisabled =
         // If this day is equal any of the disabled dates
-        _.some(
+        some(
           this.sortedDisabledDates, (i) =>
           this.compareDay(i, this.date) == 0
         )
@@ -233,7 +235,7 @@ export default {
         // Or is after the end date
         || this.compareEndDay()
         // Or is in one of the disabled days of the week
-        || _.some(
+        || some(
           this.options.disabledDaysOfWeek, (i) =>
           i == fecha.format(this.date, 'dddd')
         );
@@ -250,13 +252,13 @@ export default {
       if ( this.checkIn !== null  && this.checkOut !== null && this.isDisabled == false) {
         this.isDateLessOrEquals(this.checkIn, this.date) &&
         this.isDateLessOrEquals(this.date, this.checkOut) ?
-        this.isHighlighted = true : this.isHighlighted = false
+        this.isHighlighted = true : this.isHighlighted = false;
       }
     },
 
     createAllowedCheckoutDays(date){
       this.allowedCheckoutDays = [];
-      _.forEach(
+      forEach(
         this.options.allowedRanges, (i) =>
         this.allowedCheckoutDays.push(this.addDays(date, i))
       )
@@ -275,17 +277,17 @@ export default {
         this.isDisabled = false;
       }
       if (this.isDateLessOrEquals(this.checkIn, this.date) && this.options.enableCheckout ){
-        this.isDisabled = false
+        this.isDisabled = false;
       }
       else {
-        return
+        return;
       }
     },
   },
 
   beforeMount(){
-    this.checkIfDisabled()
-    this.checkIfHighlighted()
+    this.checkIfDisabled();
+    this.checkIfHighlighted();
   },
 }
 </script>

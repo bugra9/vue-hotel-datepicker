@@ -99,7 +99,7 @@
 import { directive as onClickOutside } from 'vue-on-click-outside';
 
 import fecha from 'fecha';
-import _ from 'lodash';
+import * as filter from 'lodash.filter';
 
 import Day from './Day.vue';
 import Helpers from './helpers.js';
@@ -132,7 +132,7 @@ export default {
     },
     endingDateValue: {
       default: null,
-      type: Date 
+      type: Date
     },
     format: {
       default: 'YYYY-MM-DD',
@@ -329,11 +329,11 @@ export default {
       let firstDayOfLastMonth;
 
       if (this.screenSize !== 'desktop') {
-        firstDayOfLastMonth = _.filter(this.months[this.months.length-1].days, {
+        firstDayOfLastMonth = filter(this.months[this.months.length-1].days, {
           'belongsToThisMonth': true
         });
       } else {
-        firstDayOfLastMonth = _.filter(this.months[this.activeMonthIndex+1].days, {
+        firstDayOfLastMonth = filter(this.months[this.activeMonthIndex+1].days, {
           'belongsToThisMonth': true
         });
       }
