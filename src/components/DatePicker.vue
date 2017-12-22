@@ -396,8 +396,10 @@ export default {
   },
 
   beforeMount() {
-    this.createMonth(new Date(this.startDate));
-    this.createMonth(this.getNextMonth(new Date(this.startDate)));
+    const date = new Date(this.endDate);
+    date.setMonth(date.getMonth() - 1);
+    this.createMonth(date);
+    this.createMonth(this.getNextMonth(new Date(date)));
     this.parseDisabledDates();
   },
 
