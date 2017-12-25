@@ -319,39 +319,13 @@ export default {
     },
 
     renderPreviousMonth() {
-      if (this.activeMonthIndex >= 1) {
+      if(this.activeMonthIndex > 0)
         this.activeMonthIndex--
-      }
-      else return
     },
 
     renderNextMonth() {
-      let firstDayOfLastMonth;
-
-      if (this.screenSize !== 'desktop') {
-        firstDayOfLastMonth = _.filter(this.months[this.months.length-1].days, {
-          'belongsToThisMonth': true
-        });
-      } else {
-        firstDayOfLastMonth = _.filter(this.months[this.activeMonthIndex+1].days, {
-          'belongsToThisMonth': true
-        });
-      }
-
-      if (this.endDate !== Infinity){
-        if (fecha.format(firstDayOfLastMonth[0].date, 'YYYYMM') ==
-            fecha.format(new Date(this.endDate), 'YYYYMM')) {
-          return
-        }
-      }
-
-      this.createMonth(
-        this.getNextMonth(
-          firstDayOfLastMonth[0].date
-        )
-      );
-
-      this.activeMonthIndex++;
+      if(this.activeMonthIndex < this.months.length - 2)
+        this.activeMonthIndex++;
     },
 
     setCheckIn(date) { this.checkIn = date; },
@@ -364,7 +338,7 @@ export default {
 
     formatDate(date) { return fecha.format(date, this.format) },
 
-    createMonth(date){
+    createMonth(date, first = false){
       const firstSunday = this.getFirstSunday(date);
 
       let month = {
@@ -379,7 +353,11 @@ export default {
         });
       }
 
-      this.months.push(month);
+      if(first) {
+        this.months.unshift(month)
+      } else {
+        this.months.push(month);
+      }
     },
 
     parseDisabledDates() {
@@ -395,11 +373,21 @@ export default {
     }
   },
 
-  beforeMount() {
-    const date = new Date(this.endDate);
+  created() {
+    this.createMonth(new Date(this.startDate));
+    this.createMonth(this.getNextMonth(new Date(this.startDate)));
+
+    const date = new Date(this.startDate);
+    const startDate = new Date(this.startDate);
+    const endDate = new Date(this.endDate);
     date.setMonth(date.getMonth() - 1);
-    this.createMonth(date);
-    this.createMonth(this.getNextMonth(new Date(date)));
+    for(let i = startDate.getFullYear()*12 + startDate.getMonth(); i <= endDate.getFullYear()*12 + endDate.getMonth(); ++i) {
+      date.setMonth(i%12);
+      date.setFullYear(i/12);
+      this.createMonth(new Date(date));
+      if(this.checkOut.getFullYear()*12 + this.checkOut.getMonth() == i)
+        this.activeMonthIndex = this.months.length - 2;
+    }
     this.parseDisabledDates();
   },
 

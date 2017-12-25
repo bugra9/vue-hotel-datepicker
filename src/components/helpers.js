@@ -81,6 +81,17 @@ export default {
     return nextMonth;
   },
 
+  getPrevMonth(date){
+    let prevMonth;
+
+    if (date.getMonth() == 1) {
+      prevMonth = new Date(date.getFullYear() - 1, 11, 1);
+    } else {
+      prevMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    }
+    return prevMonth;
+  },
+
   swipeAfterScroll(direction){
     if (this.screenSize !== 'desktop' && this.isOpen) {
       const swiperWrapper = document.getElementById('swiperWrapper');
