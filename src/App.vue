@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      startTime: '12.09.2017',
+      startTime: '12.07.2017',
       finishTime: '15.10.2017',
       tr: {
         night: 'Gün',

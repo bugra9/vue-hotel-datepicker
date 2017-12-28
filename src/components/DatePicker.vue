@@ -68,15 +68,18 @@
                 :checkOut='checkOut'
               )
         div(v-if='screenSize !== "desktop" && isOpen')
-          .datepicker__week-row
-            .datepicker__week-name(v-for='dayName in this.i18n["day-names"]' v-text='dayName')
           .datepicker__months#swiperWrapper
-            div.datepicker__month(v-for='(a, n) in months' v-bind:key='n')
+            .mobile_nav
+              span.datepicker__month-button.datepicker__month-button--prev(
+                @click='renderPreviousMonth'
+              )
+              span.datepicker__month-button.datepicker__month-button--next(
+                @click='renderNextMonth'
+              )
+            div.datepicker__month(v-for='n in [activeMonthIndex+1]' v-bind:key='n')
               h1.datepicker__month-name(v-text='getMonth(months[n].days[15].date)')
-              .datepicker__week-row.-hide-up-to-tablet
-                .datepicker__week-name(v-for='dayName in i18n["day-names"]' v-text='dayName')
+              .datepicker__week-name(v-for='dayName in i18n["day-names"]' v-text='dayName')
               .square(v-for='(day, index) in months[n].days'
-                @mouseover='hoveringDate = day.date'
                 v-bind:key='index'
                 )
                 Day(
@@ -315,6 +318,7 @@ export default {
         this.checkOut = null;
         this.checkIn = event.date;
       }
+
       this.nextDisabledDate = event.nextDisabledDate
     },
 
@@ -374,9 +378,6 @@ export default {
   },
 
   created() {
-    this.createMonth(new Date(this.startDate));
-    this.createMonth(this.getNextMonth(new Date(this.startDate)));
-
     const date = new Date(this.startDate);
     const startDate = new Date(this.startDate);
     const endDate = new Date(this.endDate);
@@ -857,4 +858,13 @@ $font-small: 14px;
   }
 }
 
+.mobile_nav {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: -20px;
+}
+h1.datepicker__month-name {
+  margin-top: -30px;
+}
 </style>
